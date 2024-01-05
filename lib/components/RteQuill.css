@@ -1,0 +1,27 @@
+/* Styles for the Quill Editor */
+.rte-input .ql-editor {
+  min-height: 160px;
+  font-size: 16px; /* Ensure to define this CSS variable or replace with a static value */
+}
+
+.ql-formats {
+  display: inline-flex;
+  width: fit-content;
+}
+
+.ql-color .ql-picker-options [data-value="color-picker"]:before {
+  content: "Pick Color";
+}
+
+.ql-color .ql-picker-options [data-value="color-picker"] {
+  background: none !important;
+  width: 100% !important;
+  height: 25px !important;
+  text-align: center;
+  color: blue;
+  text-decoration: underline;
+}
+
+.rf-toolbar .ql-size.ql-picker {
+  width: 120px;
+}

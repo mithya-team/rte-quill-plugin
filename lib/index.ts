@@ -1,3 +1,4 @@
-import RteQuill from "./components/RteQuill";
+import RteQuill, { RichTextEditorProps } from "./components/RteQuill";
 
 export { RteQuill };
+export type { RichTextEditorProps };

@@ -1,3 +1,3 @@
-import SuggestiveInput, { SuggestiveInputProps } from "./components/SuggestiveInput";
-export { SuggestiveInput };
-export type { SuggestiveInputProps };
+import RteQuill, { RichTextEditorProps } from "./components/RteQuill";
+export { RteQuill };
+export type { RichTextEditorProps };

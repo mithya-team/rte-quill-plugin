@@ -1,21 +1,15 @@
 import * as React from "react";
-import InputPlayground from "./components/InputPlayground";
-import ReactFormExample from "./components/ReactFormExample";
+import Example from "./components/RteQuillExample";
 
 const App: React.FC = () => {
   return (
     <>
       <div>
-        <h1>Input Component Playground</h1>
-
-        <div>
-          <h2>Standalone Component</h2>
-          <InputPlayground />
-        </div>
+        <h1>RTE Quill Playground</h1>
 
         <div>
           <h2>With React Hook Form</h2>
-          <ReactFormExample />
+          <Example />
         </div>
       </div>
     </>
