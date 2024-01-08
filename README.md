@@ -1,219 +1,86 @@
-# SuggestiveInput Component Documentation
+# rte-quill-plugin
 
-## Introduction
-
-`SuggestiveInput` is a React component designed to provide autocomplete functionality. It allows users to type in an input field and dynamically receive suggestions based on their input, improving user experience and efficiency.
+`rte-quill-plugin` is a plugin for integrating Quill rich text editor with your form library. It provides an easy-to-use interface for creating rich text content within forms handled by popular form libraries like React Hook Form, Formik, or Redux Form.
 
 ## Features
 
-- Debounced fetching of suggestions for efficient performance.
-- Customizable suggestion fetching function.
-- Keyboard navigation for selecting suggestions.
-- Customizable styling via a classes object.
-- Support for loading and "no match" states with custom render options.
+- **Rich Text Editing**: Utilize the full power of Quill's rich text editing.
+- **Form Library Integration**: Seamlessly integrates with your form library for easy data handling.
+- **Customizable Toolbars**: Configure toolbars to include only the options you need.
+- **Image and Color Support**: Support for custom image uploads and a color picker.
+- **Responsive and Adaptive**: Works across different devices and screen sizes.
+
+## Description
+
+The `rte-quill-plugin` provides a simple way to include rich text editing in your forms. Whether you're building a blog, a CMS, or any application requiring formatted text input, this plugin is designed to be a drop-in solution that integrates Quill editor with your form library, ensuring that text data is easily captured and managed within your form's state.
+
+## Installation
+
+Install the package via npm or yarn:
+
+```bash
+npm install rte-quill-plugin
+```
+
+or
+
+```bash
+yarn add rte-quill-plugin
+```
 
 ## Usage
 
-To use the `SuggestiveInput` component, you'll need to have a function ready to fetch suggestions, typically from an API or a local source. Here's a basic example:
+To use the plugin, import it in your form component and use it as a controlled component:
 
 ```tsx
-import React from "react";
-import SuggestiveInput from "suggestive-input-plugin";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import RTEQuill from "rte-quill-plugin";
 
-const App = () => {
-  const handleSelection = (value) => {
-    console.log("User selected:", value);
-  };
+const MyForm = () => {
+  const [content, setContent] = useState("");
+  const { handleSubmit, control } = useForm();
 
-  const fetchSuggestions = async (input) => {
-    // Replace with actual suggestion logic
-    return ["apple", "banana", "cherry"].filter((item) => item.includes(input));
-  };
-
-  return (
-    <SuggestiveInput
-      fetchSuggestions={fetchSuggestions}
-      onSelection={handleSelection}
-      classes={{
-        root: "suggestive-input-root",
-        input: "suggestive-input-input",
-        suggestionList: "suggestive-input-list",
-        suggestionItem: "suggestive-input-item",
-        highlighted: "suggestive-input-highlighted",
-      }}
-    />
-  );
-};
-
-export default App;
-```
-
-### With React Hook Form:
-
-```tsx
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import { SuggestiveInput } from "suggestive-input-plugin"; // ensure this is the correct path to your component
-
-const mockFetchSuggestions = async (input: string): Promise<string[]> => {
-  const allSuggestions = ["apple", "banana", "cherry", "date", "eggfruit"];
-  return allSuggestions.filter((suggestion) =>
-    suggestion.toLowerCase().includes(input.toLowerCase())
-  );
-};
-
-export const ReactFormExample: React.FC = () => {
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      suggestiveInput: "", // Ensure this default value is aligned with the name given to the Controller
-    },
-  });
-
-  const onSubmit = (data: Record<string, unknown>) => {
-    console.log("Form Data: ", data);
-  };
+  const onSubmit = (data) => console.log(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Controller
-        name="suggestiveInput" // Ensure this name matches the key in defaultValues
-        control={control}
-        render={({ field }) => (
-          <SuggestiveInput
-            fetchSuggestions={mockFetchSuggestions}
-            onSelection={field.onChange} // Directly using field.onChange for selection
-            debounceTime={300}
-            defaultValue={field.value} // Using field.value for overriding components default value
-            classes={{
-              root: "suggestive-input-root",
-              input: "suggestive-input-input",
-              suggestionList: "suggestive-input-list",
-              suggestionItem: "suggestive-input-item",
-              highlighted: "suggestive-input-highlighted",
-              activeSuggestion: "suggestive-input-item-active",
-            }}
-            allowStrictSelection={false}
-          />
-        )}
-      />
-      <input type="submit" value="Submit" />
+      <RTEQuill value={content} onChange={setContent} name="content" />
+      <input type="submit" />
     </form>
   );
 };
-
-export default ReactFormExample;
 ```
 
-## API
+## Props
 
-```ts
-export interface SuggestiveInputProps {
-  fetchSuggestions: (input: string) => Promise<string[]> | string[];
-  onSelection: (value: string) => void;
-  debounceTime?: number;
-  defaultValue?: string;
-  classes?: {
-    root?: string;
-    input?: string;
-    suggestionList?: string;
-    suggestionItem?: string;
-    activeSuggestion?: string;
-    highlighted?: string; // For highlighting matching parts of suggestions
-    noSuggestions?: string; // For styling the no suggestions message
-    loading?: string; // For styling the loading message
-  };
-  loadingComponent?: React.ReactNode; // Custom component for loading state
-  noSuggestionsComponent?: React.ReactNode; // Custom component when no suggestions found
-  allowStrictSelection?: boolean; // allow output to strictly match any option from suggestions
-}
-```
+Below are the properties you can pass to `RteQuill` component:
 
-## Styling
+- `name` (string): Identifies the field in a form. It's important for handling form data and linking the label to the editor.
+- `label` (string): Text displayed above the editor as a label.
+- `helperText` (string): Additional guidance or information displayed below the editor.
+- `sizes` (QuillFontSizeOption[]): Defines the font size options available in the editor. Each option should have a `label` (string) for display and a `value` (string) representing the font size.
+- `customImageUploadAdapter` (function): A function that handles image uploading. It takes a `File` object as input and returns a `Promise` that resolves to the image URL.
+- `toolbarProps` (object): Properties for customizing the editor's toolbar. Note that "customSizes" and "id" are omitted from this object.
+- `errorText` (string): Text to display any error or validation message related to the editor.
 
-### Using CSS
+Ensure to spread the `field` object from `react-hook-form`'s `Controller` render prop to `RteQuill` to fully integrate with form handling.
 
-Here are CSS rules you might want to override for the default classes:
-
-```css
-/* Root of the component */
-.suggestive-input--root {
-  position: relative;
-  width: 300px; /* Adjust the width as needed */
-}
-
-/* Input field styling */
-.suggestive-input--input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Suggestion list styling */
-.suggestive-input--list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  width: 100%;
-  background: white;
-  border: 1px solid #ccc;
-  border-top: none; /* Make it look connected to the input */
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  max-height: 200px; /* Adjust based on your need */
-  overflow-y: auto; /* Enable scroll if list is too long */
-  z-index: 1000; /* Ensure it's above other elements */
-}
-
-.suggestive-input--loading {
-}
-
-.suggestive-input--no-suggestion {
-}
-
-/* Individual suggestion item */
-.suggestive-input--item {
-  padding: 8px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee; /* subtle separator */
-}
-
-/* Highlighted text within suggestions */
-.suggestive-input--highlighted {
-  background-color: yellow; /* Highlight color */
-  font-weight: bold; /* Make it bold */
-}
-
-/* Suggestion item - Hover and Active States */
-.suggestive-input--item:hover,
-.suggestive-input--item:active,
-.suggestive-input--item.active {
-  /* class for active suggestion */
-  background-color: #f0f0f0; /* Slightly darker on hover */
-}
-
-.suggestive-input-item--active {
-  background-color: #f0f0f0; /* Highlight color */
-}
-```
-
-### Using Tailwind
-
-The component can be fully customized via the `classes` prop.
+### Example usage in Controller:
 
 ```tsx
-<SuggestiveInput
-  ...
-  ...
-  classes={{
-    root: "suggestive-input-root",
-    input: "suggestive-input-input",
-    suggestionList: "suggestive-input-list",
-    suggestionItem: "suggestive-input-item",
-    highlighted: "suggestive-input-highlighted",
-    activeSuggestion: "suggestive-input-item-active",
-  }}
-  ...
+<Controller
+  name="rteEditor"
+  control={control}
+  render={({ field }) => <RteQuill {...dummyRteQuillProps} {...field} />}
 />
 ```
+
+Checkout the [playground code](https://github.com/mithya-team/rte-quill-plugin/blob/main/src/components/RteQuillExample.tsx) for implementation
+
+## Issues and Pull Requests
+
+Contributions are always welcome! If you encounter any issues or would like to contribute, please file an issue or submit a PR:
+
+Issues: GitHub Issues
+Pull Requests: GitHub Pull Requests
