@@ -19,13 +19,13 @@ The `rte-quill-plugin` provides a simple way to include rich text editing in you
 Install the package via npm or yarn:
 
 ```bash
-npm install rte-quill-plugin
+npm install @mithya-team/rte-quill-plugin
 ```
 
 or
 
 ```bash
-yarn add rte-quill-plugin
+yarn add @mithya-team/rte-quill-plugin
 ```
 
 ## Usage
@@ -35,7 +35,7 @@ To use the plugin, import it in your form component and use it as a controlled c
 ```tsx
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import RTEQuill from "rte-quill-plugin";
+import RTEQuill from "@mithya-team/rte-quill-plugin";
 
 const MyForm = () => {
   const [content, setContent] = useState("");
